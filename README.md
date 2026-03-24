@@ -1,4 +1,9 @@
 # Shakir MNTF
+
+<p align="center">
+  <img src="assets/logo.svg" alt="Shakir MNTF Logo" width="180"/>
+</p>
+
 ### Molecular Dynamics Simulation Software
 
 > **© 2026 Abdul Haseeb Shakir — All Rights Reserved.**
