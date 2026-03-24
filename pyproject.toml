@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shakir-mntf"
+version = "1.0.0"
+description = "GPU-accelerated Molecular Dynamics Simulation Software by Abdul Haseeb Shakir"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Abdul Haseeb Shakir", email = "haseebshakir60@gmail.com" }
+]
+keywords = [
+    "molecular dynamics", "simulation", "LAMMPS", "GPU",
+    "Lennard-Jones", "force field", "NVE", "NVT", "NPT",
+    "computational physics", "materials science"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "License :: Other/Proprietary License",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "numba>=0.59",
+    "scipy>=1.12",
+    "PyQt6>=6.6",
+    "pyvista>=0.43",
+    "pyvistaqt>=0.4",
+    "PyOpenGL>=3.1",
+    "matplotlib>=3.8",
+    "openpyxl>=3.1",
+    "psutil>=5.9",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+gpu = ["cupy-cuda12x>=13.0"]
+ml  = ["torch>=2.2"]
+all = ["cupy-cuda12x>=13.0", "torch>=2.2"]
+
+[project.urls]
+Homepage   = "https://github.com/haseebshakir60-svg/Shakir-MNTF"
+Repository = "https://github.com/haseebshakir60-svg/Shakir-MNTF"
+
+[project.scripts]
+shakir-mntf = "main:main"
+
+[tool.setuptools.packages.find]
+where   = ["."]
+include = [
+    "appconfig*", "builder*", "core*",
+    "gui*", "mdio*", "signals*", "workers*",
+    "presets*", "assets*"
+]
+
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.svg", "*.png", "*.ico"]
