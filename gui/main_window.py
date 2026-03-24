@@ -389,11 +389,14 @@ class MainWindow(QMainWindow):
         QMessageBox.about(
             self, f"About {APP_NAME}",
             f"<b>{APP_NAME}</b> v{APP_VERSION}<br><br>"
+            "<b>Author:</b> Abdul Haseeb Shakir<br>"
+            "© 2026 Abdul Haseeb Shakir. All Rights Reserved.<br><br>"
             "A parallel molecular dynamics simulation platform.<br><br>"
             "Built with Python · PyQt6 · Numba · PyVista<br>"
             "GPU acceleration via CuPy (RTX 4060 Ti)<br><br>"
             "Physics engine: Lennard-Jones, Morse, Tersoff<br>"
-            "Ensembles: NVE · NVT (Berendsen / Nosé-Hoover) · NPT",
+            "Ensembles: NVE · NVT (Berendsen / Nosé-Hoover) · NPT<br><br>"
+            "<i>Do not use without written permission from Abdul Haseeb Shakir.</i>",
         )
 
     def closeEvent(self, event) -> None:

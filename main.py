@@ -1,6 +1,14 @@
 """
 Shakir MNTF — entry point.
 
+Author:  Abdul Haseeb Shakir
+Version: 1.0.0
+Year:    2026
+
+© 2026 Abdul Haseeb Shakir. All Rights Reserved.
+Do not use, copy, or distribute without written permission
+from Abdul Haseeb Shakir.
+
 Run with:
     python main.py
 
