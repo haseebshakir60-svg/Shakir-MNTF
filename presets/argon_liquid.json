@@ -1,0 +1,26 @@
+{
+  "name": "Argon Liquid (Canonical)",
+  "description": "864 Ar atoms, NVT at 90 K, LJ potential — classic benchmark",
+  "system": {
+    "element": "Ar",
+    "lattice": "FCC",
+    "n_cells": 6,
+    "T_K": 90.0
+  },
+  "simulation": {
+    "ensemble": "NVT",
+    "integrator": "Velocity Verlet",
+    "thermostat": "Berendsen",
+    "T_target_K": 90.0,
+    "tau_T": 100.0,
+    "n_steps": 100000,
+    "dt": 0.005,
+    "record_every": 200
+  },
+  "forcefield": {
+    "type": "Lennard-Jones",
+    "epsilon": 1.0,
+    "sigma": 1.0,
+    "r_cut": 2.5
+  }
+}

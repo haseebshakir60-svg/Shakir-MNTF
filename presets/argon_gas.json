@@ -1,0 +1,24 @@
+{
+  "name": "Argon Gas",
+  "description": "500 Ar atoms in NVE, low density — ideal gas verification",
+  "system": {
+    "element": "Ar",
+    "lattice": "Random Gas",
+    "n_atoms": 500,
+    "box_size": 30.0,
+    "T_K": 300.0
+  },
+  "simulation": {
+    "ensemble": "NVE",
+    "integrator": "Velocity Verlet",
+    "n_steps": 50000,
+    "dt": 0.005,
+    "record_every": 100
+  },
+  "forcefield": {
+    "type": "Lennard-Jones",
+    "epsilon": 1.0,
+    "sigma": 1.0,
+    "r_cut": 2.5
+  }
+}

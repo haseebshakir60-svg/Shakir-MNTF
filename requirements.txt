@@ -1,0 +1,26 @@
+# Core numerics
+numpy>=1.26
+numba>=0.59
+scipy>=1.12
+
+# GPU acceleration (match your CUDA version - RTX 4060 Ti)
+cupy-cuda12x>=13.0
+
+# GUI Framework
+PyQt6>=6.6
+pyvista>=0.43
+pyvistaqt>=0.4
+PyOpenGL>=3.1
+
+# Plotting
+matplotlib>=3.8
+
+# Machine Learning potential
+torch>=2.2
+
+# I/O
+openpyxl>=3.1
+
+# Utilities
+psutil>=5.9
+tqdm>=4.66

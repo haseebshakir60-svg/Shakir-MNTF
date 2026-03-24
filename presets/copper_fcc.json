@@ -1,0 +1,26 @@
+{
+  "name": "Copper FCC Crystal",
+  "description": "864 Cu atoms, NVT at 300 K, LJ potential",
+  "system": {
+    "element": "Cu",
+    "lattice": "FCC",
+    "n_cells": 6,
+    "T_K": 300.0
+  },
+  "simulation": {
+    "ensemble": "NVT",
+    "integrator": "Velocity Verlet",
+    "thermostat": "Nosé-Hoover",
+    "T_target_K": 300.0,
+    "tau_T": 100.0,
+    "n_steps": 50000,
+    "dt": 0.005,
+    "record_every": 200
+  },
+  "forcefield": {
+    "type": "Lennard-Jones",
+    "epsilon": 1.0,
+    "sigma": 1.0,
+    "r_cut": 2.5
+  }
+}
