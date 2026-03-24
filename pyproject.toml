@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "shakir-mntf"
-version = "1.0.0"
+version = "1.0.1"
 description = "GPU-accelerated Molecular Dynamics Simulation Software by Abdul Haseeb Shakir"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -51,11 +51,12 @@ Homepage   = "https://github.com/haseebshakir60-svg/Shakir-MNTF"
 Repository = "https://github.com/haseebshakir60-svg/Shakir-MNTF"
 
 [project.scripts]
-shakir-mntf = "main:main"
+shakir-mntf = "shakir_mntf.main:main"
 
 [tool.setuptools.packages.find]
 where   = ["."]
 include = [
+    "shakir_mntf*",
     "appconfig*", "builder*", "core*",
     "gui*", "mdio*", "signals*", "workers*",
     "presets*", "assets*"
