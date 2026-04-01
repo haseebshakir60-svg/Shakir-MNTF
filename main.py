@@ -1,13 +1,5 @@
 """
-Shakir MNTF — entry point.
-
-Author:  Abdul Haseeb Shakir
-Version: 1.0.0
-Year:    2026
-
-© 2026 Abdul Haseeb Shakir. All Rights Reserved.
-Do not use, copy, or distribute without written permission
-from Abdul Haseeb Shakir.
+PyMDStudio — entry point.
 
 Run with:
     python main.py
@@ -28,10 +20,12 @@ os.environ.setdefault("MKL_NUM_THREADS",   str(max(1, os.cpu_count() - 1)))
 sys.path.insert(0, os.path.dirname(__file__))
 
 from PyQt6.QtWidgets import QApplication
+
+
 from PyQt6.QtCore import Qt
 
 from gui.main_window import MainWindow
-from gui.style import apply_theme
+from gui.style import DARK_STYLESHEET
 
 
 def main() -> None:
@@ -41,14 +35,9 @@ def main() -> None:
     )
 
     app = QApplication(sys.argv)
-    app.setApplicationName("Shakir MNTF")
+    app.setApplicationName("PyMDStudio")
     app.setApplicationVersion("1.0.0")
-    apply_theme(app, "dark")   # default theme; user can switch via View → Theme
-
-    _logo = os.path.join(os.path.dirname(__file__), "assets", "logo.svg")
-    if os.path.exists(_logo):
-        from PyQt6.QtGui import QIcon
-        app.setWindowIcon(QIcon(_logo))
+    app.setStyleSheet(DARK_STYLESHEET)
 
     window = MainWindow()
     window.show()
