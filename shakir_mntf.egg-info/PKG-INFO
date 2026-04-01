@@ -1,0 +1,131 @@
+Metadata-Version: 2.4
+Name: shakir-mntf
+Version: 1.0.2
+Summary: GPU-accelerated Molecular Dynamics Simulation Software by Abdul Haseeb Shakir
+Author-email: Abdul Haseeb Shakir <haseebshakir60@gmail.com>
+License: Copyright (c) 2026 Abdul Haseeb Shakir. All Rights Reserved.
+        
+        This software and its source code ("Shakir MNTF") are the exclusive intellectual
+        property of Abdul Haseeb Shakir.
+        
+        RESTRICTIONS:
+        - You may NOT use, copy, modify, merge, publish, distribute, sublicense, or sell
+          copies of this software or any portion of it without the express written
+          permission of Abdul Haseeb Shakir.
+        - You may NOT use this software for commercial purposes without prior written
+          consent from Abdul Haseeb Shakir.
+        - You may NOT claim authorship or ownership of this software or any derivative
+          work based on it.
+        
+        PERMITTED:
+        - You may view this code for personal educational reference only.
+        
+        For permission requests, contact the author.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED. IN NO EVENT SHALL ABDUL HASEEB SHAKIR BE LIABLE FOR ANY CLAIM,
+        DAMAGES OR OTHER LIABILITY ARISING FROM THE USE OF THIS SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/haseebshakir60-svg/Shakir-MNTF
+Project-URL: Repository, https://github.com/haseebshakir60-svg/Shakir-MNTF
+Keywords: molecular dynamics,simulation,LAMMPS,GPU,Lennard-Jones,force field,NVE,NVT,NPT,computational physics,materials science
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: Topic :: Scientific/Engineering :: Chemistry
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Operating System :: OS Independent
+Classifier: License :: Other/Proprietary License
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy>=1.26
+Requires-Dist: numba>=0.59
+Requires-Dist: scipy>=1.12
+Requires-Dist: PyQt6>=6.6
+Requires-Dist: pyvista>=0.43
+Requires-Dist: pyvistaqt>=0.4
+Requires-Dist: PyOpenGL>=3.1
+Requires-Dist: matplotlib>=3.8
+Requires-Dist: openpyxl>=3.1
+Requires-Dist: psutil>=5.9
+Requires-Dist: tqdm>=4.66
+Provides-Extra: gpu
+Requires-Dist: cupy-cuda12x>=13.0; extra == "gpu"
+Provides-Extra: ml
+Requires-Dist: torch>=2.2; extra == "ml"
+Provides-Extra: all
+Requires-Dist: cupy-cuda12x>=13.0; extra == "all"
+Requires-Dist: torch>=2.2; extra == "all"
+Dynamic: license-file
+
+# Shakir MNTF
+
+<p align="center">
+  <img src="assets/logo.svg" alt="Shakir MNTF Logo" width="180"/>
+</p>
+
+### Molecular Dynamics Simulation Software
+
+> **© 2026 Abdul Haseeb Shakir — All Rights Reserved.**
+> This software may not be used, copied, modified, or distributed without the
+> express written permission of **Abdul Haseeb Shakir**.
+
+---
+
+## About
+
+**Shakir MNTF** is a GPU-accelerated molecular dynamics simulation desktop
+application developed entirely by **Abdul Haseeb Shakir**.
+
+It provides a user-friendly alternative to LAMMPS with a modern dark-themed
+PyQt6 interface, real-time 3D visualization, and support for multiple
+ensembles, force fields, thermostats, and observables.
+
+---
+
+## Features
+
+- Real-time 3D atom visualization (PyVista)
+- GPU acceleration via CuPy (CUDA — tested on RTX 4060 Ti)
+- Lennard-Jones & Morse force fields
+- NVE / NVT / NPT ensembles
+- Velocity Verlet & Leapfrog integrators
+- Berendsen, Velocity Rescale & Nosé-Hoover thermostats
+- Cell-linked list O(N) neighbor builder
+- RDF, MSD, density profile observables
+- XYZ trajectory, CSV thermodynamics & checkpoint I/O
+- Preset simulations: Argon liquid, Argon gas, Copper FCC
+
+---
+
+## Installation
+
+```bash
+pip install -r requirements.txt
+python main.py
+```
+
+**Requirements:** Python 3.12, PyQt6, Numba, NumPy, PyVista, matplotlib, CuPy (optional)
+
+---
+
+## Author & Credits
+
+| Field        | Detail                    |
+|--------------|---------------------------|
+| **Author**   | Abdul Haseeb Shakir       |
+| **Software** | Shakir MNTF               |
+| **Version**  | 1.0.0                     |
+| **Year**     | 2026                      |
+
+---
+
+## License
+
+**© 2026 Abdul Haseeb Shakir — All Rights Reserved.**
+
+This project is protected under a proprietary license.
+**Do not use, copy, or distribute without written permission from Abdul Haseeb Shakir.**
+See [LICENSE](LICENSE) for full terms.

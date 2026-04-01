@@ -1,0 +1,2 @@
+[console_scripts]
+shakir-mntf = shakir_mntf.main:main
