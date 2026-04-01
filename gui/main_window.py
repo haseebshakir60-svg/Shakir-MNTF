@@ -42,6 +42,7 @@ from core.state import SimulationState
 from core.units import ELEMENTS, K_to_reduced
 from core.forcefields.lennard_jones import LJForcefield
 from core.forcefields.morse import MorseForcefield
+from core.forcefields.eam import EAMForcefield
 from core.integrators.velocity_verlet import VelocityVerletIntegrator
 from core.integrators.leapfrog import LeapfrogIntegrator
 from core.thermostats.berendsen import BerendsenThermostat
@@ -200,6 +201,7 @@ class MainWindow(QMainWindow):
         # Tell the analysis panel which element so it can show the right reference
         element = state.species[0] if state.species else "Ar"
         self.analysis_panel.set_element(element)
+        self.sim_panel.set_element(element)
         log.info("System ready: %d atoms, box %.2f σ", state.n_atoms, state.box[0])
         self.status_bar.showMessage(
             f"System: {state.n_atoms} atoms  |  Box: {state.box[0]:.2f} σ  |  "
@@ -225,13 +227,21 @@ class MainWindow(QMainWindow):
         os.environ["OPENBLAS_NUM_THREADS"] = str(n_cores)
         log.info("Parallelism: %d CPU core(s), GPU=%s", n_cores, params.get("use_gpu", False))
 
+        # Resolve hardware backend from GUI checkboxes
+        use_gpu  = params.get("use_gpu", False)
+        lj_back  = "gpu"          if use_gpu else "cpu_parallel"
+        eam_back = "gpu"          if use_gpu else "cpu"
+
         # Build force field
         if params["forcefield"] == "Lennard-Jones":
             ff = LJForcefield(
                 epsilon=params["epsilon"],
                 sigma=params["sigma"],
                 r_cut=params["r_cut"],
+                force_backend=lj_back,
             )
+        elif params["forcefield"] == "EAM (Cu)":
+            ff = EAMForcefield("Cu_u3.eam", element="Cu", backend=eam_back)
         else:
             ff = MorseForcefield()
 
@@ -263,12 +273,19 @@ class MainWindow(QMainWindow):
             else:
                 ensemble = NVTEnsemble(integrator, thermo)
 
+        # For EAM use the potential's own cutoff (in reduced units) + skin;
+        # for LJ/Morse use the panel value.
+        if hasattr(ff, "r_cut_reduced"):
+            r_cut_sim = ff.r_cut_reduced + 0.3   # 0.3σ skin in reduced units
+        else:
+            r_cut_sim = params["r_cut"]
+
         engine = SimulationEngine(
             state=self._state,
             forcefield=ff,
             ensemble=ensemble,
             dt=params["dt"],
-            r_cut=params["r_cut"],
+            r_cut=r_cut_sim,
         )
 
         # Open output files

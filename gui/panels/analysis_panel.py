@@ -80,7 +80,7 @@ class AnalysisPanel(QWidget):
         self._canvas_e = canvas
         ax = axes[0]
         ax.set_title("Energy", pad=4)
-        ax.set_xlabel("Step"); ax.set_ylabel("Energy (reduced)"); ax.grid(True)
+        ax.set_xlabel("Step"); ax.set_ylabel("Energy (eV)"); ax.grid(True)
         self._line_ke, = ax.plot([], [], color="#00e5ff", label="KE")
         self._line_pe, = ax.plot([], [], color="#ff4444", label="PE")
         self._line_te, = ax.plot([], [], color="#80ff80", label="TE")
@@ -94,7 +94,7 @@ class AnalysisPanel(QWidget):
         self._canvas_T = canvas
         ax = axes[0]
         ax.set_title("Temperature", pad=4)
-        ax.set_xlabel("Step"); ax.set_ylabel("T (reduced)"); ax.grid(True)
+        ax.set_xlabel("Step"); ax.set_ylabel("T (K)"); ax.grid(True)
         self._line_T, = ax.plot([], [], color="#ffaa00")
         self._ax_T = ax
         w = QWidget(); QVBoxLayout(w).addWidget(canvas)
@@ -242,6 +242,19 @@ class AnalysisPanel(QWidget):
         self._refresh_reference_labels()
 
     def update_thermo(self, data: dict) -> None:
+        # Convert reduced units → physical units for display
+        from core.units import ELEMENTS, KB_SI
+        _EV = 1.602176634e-19
+        elem = ELEMENTS.get(self._element)
+        if elem:
+            data = dict(data)
+            eps_eV = elem.epsilon_J / _EV
+            if "temperature" in data:
+                data["temperature"] = data["temperature"] * elem.epsilon_J / KB_SI
+            for key in ("ke", "pe", "te"):
+                if key in data:
+                    data[key] = data[key] * eps_eV
+
         for key in ["step", "ke", "pe", "te", "temperature", "pressure", "density"]:
             if key in data:
                 self._data[key].append(data[key])

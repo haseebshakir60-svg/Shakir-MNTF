@@ -28,6 +28,7 @@ class SimulationPanel(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self._element = "Ar"
         self._build_ui()
 
     def _build_ui(self):
@@ -104,23 +105,28 @@ class SimulationPanel(QWidget):
         form_ff = QFormLayout(grp_ff)
 
         self.combo_ff = QComboBox()
-        self.combo_ff.addItems(["Lennard-Jones", "Morse"])
+        self.combo_ff.addItems(["Lennard-Jones", "Morse", "EAM (Cu)"])
+        self.combo_ff.currentTextChanged.connect(self._on_ff_changed)
         form_ff.addRow("Potential:", self.combo_ff)
 
         self.dspin_eps = QDoubleSpinBox()
         self.dspin_eps.setRange(0.01, 100.0)
         self.dspin_eps.setValue(1.0)
-        form_ff.addRow("ε:", self.dspin_eps)
+        self._row_eps = form_ff.addRow("ε:", self.dspin_eps)
 
         self.dspin_sig = QDoubleSpinBox()
         self.dspin_sig.setRange(0.1, 10.0)
         self.dspin_sig.setValue(1.0)
-        form_ff.addRow("σ:", self.dspin_sig)
+        self._row_sig = form_ff.addRow("σ:", self.dspin_sig)
 
         self.dspin_rcut = QDoubleSpinBox()
         self.dspin_rcut.setRange(1.0, 10.0)
         self.dspin_rcut.setValue(2.5)
-        form_ff.addRow("r_cut (×σ):", self.dspin_rcut)
+        self._row_rcut = form_ff.addRow("r_cut (×σ):", self.dspin_rcut)
+
+        self._lbl_eam = QLabel("Cu_u3.eam  (Foiles 1986)")
+        self._lbl_eam.setVisible(False)
+        form_ff.addRow("File:", self._lbl_eam)
 
         root.addWidget(grp_ff)
 
@@ -218,26 +224,35 @@ class SimulationPanel(QWidget):
         core_row.addWidget(self.lbl_cores)
         form_par.addRow("CPU cores:", core_row)
 
-        # GPU checkbox — auto-detect
-        self.chk_gpu = QCheckBox("Use GPU (CUDA)")
+        # GPU checkbox — detect via numba.cuda (same backend the engine uses)
+        self.chk_gpu = QCheckBox("Use GPU (CUDA)  — force calculation on GPU")
+        gpu_ok  = False
+        gpu_name = "None"
         try:
-            import cupy as cp
-            gpu_ok = cp.cuda.runtime.getDeviceCount() > 0
+            from numba import cuda as _nc
+            if _nc.is_available():
+                gpu_ok   = True
+                gpu_name = _nc.get_current_device().name.decode()
         except Exception:
-            gpu_ok = False
+            pass
         self.chk_gpu.setChecked(gpu_ok)
         self.chk_gpu.setEnabled(gpu_ok)
+        self.chk_gpu.setToolTip(
+            "When checked, force calculations run on the GPU.\n"
+            "CPU cores slider controls parallelism when GPU is OFF."
+        )
         if not gpu_ok:
             self.chk_gpu.setText("Use GPU (CUDA)  — not available")
-        form_par.addRow("", self.chk_gpu)
+        form_par.addRow("Backend:", self.chk_gpu)
+
+        # When GPU is on, CPU core count doesn't affect force calc → grey out
+        def _on_gpu_toggled(checked: bool) -> None:
+            self.slider_cores.setEnabled(not checked)
+            self.lbl_cores.setEnabled(not checked)
+        self.chk_gpu.toggled.connect(_on_gpu_toggled)
+        _on_gpu_toggled(gpu_ok)   # apply immediately
 
         # Hardware summary label
-        try:
-            import cupy as cp
-            props = cp.cuda.runtime.getDeviceProperties(0)
-            gpu_name = props["name"].decode()
-        except Exception:
-            gpu_name = "None"
         hw_text = f"CPU: {n_physical} logical cores"
         if gpu_name != "None":
             hw_text += f"  |  GPU: {gpu_name}"
@@ -252,6 +267,13 @@ class SimulationPanel(QWidget):
         # Wire buttons
         self.btn_run.clicked.connect(self._on_run_clicked)
         self.btn_stop.clicked.connect(self.stop_requested.emit)
+
+    def _on_ff_changed(self, text: str) -> None:
+        is_lj = text == "Lennard-Jones"
+        self.dspin_eps.setVisible(is_lj)
+        self.dspin_sig.setVisible(is_lj)
+        self.dspin_rcut.setVisible(is_lj)
+        self._lbl_eam.setVisible(text == "EAM (Cu)")
 
     def _on_ensemble_changed(self, text: str) -> None:
         is_nvt_npt = text in ("NVT", "NPT")
@@ -288,12 +310,31 @@ class SimulationPanel(QWidget):
         self.lbl_remaining.setText(_fmt_time(remaining))
         self.lbl_speed.setText(f"{speed:,.0f} steps/s")
 
+    def set_element(self, element: str) -> None:
+        self._element = element
+
     def update_thermo(self, data: dict) -> None:
+        from core.units import ELEMENTS, KB_SI
+        _EV = 1.602176634e-19   # J per eV
+        elem = ELEMENTS.get(self._element)
+        if elem:
+            data = dict(data)
+            eps_eV = elem.epsilon_J / _EV
+            if "temperature" in data:
+                data["temperature"] = data["temperature"] * elem.epsilon_J / KB_SI
+            for key in ("ke", "pe", "te"):
+                if key in data:
+                    data[key] = data[key] * eps_eV
+
         for key, lbl in self._thermo_labels.items():
             if key in data:
                 val = data[key]
                 if key == "step":
                     lbl.setText(f"{int(val):,}")
+                elif key == "temperature":
+                    lbl.setText(f"{val:.1f} K")
+                elif key in ("ke", "pe", "te"):
+                    lbl.setText(f"{val:.4f} eV")
                 else:
                     lbl.setText(f"{val:.4f}")
 
