@@ -55,7 +55,7 @@ python main.py
 |--------------|---------------------------|
 | **Author**   | Abdul Haseeb Shakir       |
 | **Software** | Shakir MNTF               |
-| **Version**  | 1.0.0                     |
+| **Version**  | 1.0.2                     |
 | **Year**     | 2026                      |
 
 ---
